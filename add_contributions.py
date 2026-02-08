@@ -53,7 +53,11 @@ def main():
             f.write(f"{datetime.now(timezone.utc).isoformat()} contribution {i + 1}/{count}\n")
         run_cmd(f"{git_prefix} add {CONTRIB_FILE}")
         run_cmd(f'{git_prefix} commit -m "contribution {i + 1}/{count}"')
-        run_cmd(f"{git_prefix} push")
+        push_result = run_cmd(f"{git_prefix} push", check=False)
+        if push_result.returncode != 0 and ("rejected" in (push_result.stderr or "") or "non-fast-forward" in (push_result.stderr or "").lower()):
+            run_cmd(f"{git_prefix} push --force-with-lease")
+        elif push_result.returncode != 0:
+            push_result.check_returncode()
         gap = random.uniform(DELAY_MIN, DELAY_MAX)
         print(f"  {i + 1}/{count} pushed. Next in {gap:.0f}s")
         if i < count - 1:

@@ -13,8 +13,7 @@ from datetime import datetime, timezone
 
 CONTRIB_FILE = "contributions.txt"
 COUNT_MIN, COUNT_MAX = 15, 40
-DELAY_MIN, DELAY_MAX = 30, 300  # seconds between pushes
-
+DELAY_MIN, DELAY_MAX = 30, 300 
 
 def run_cmd(cmd, check=True):
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
